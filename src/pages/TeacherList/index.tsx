@@ -1,18 +1,31 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, ScrollView, Text, TextInput } from 'react-native'
 import PageHeader from '../../components/PageHeader'
 import TeacherItem, { Teacher } from '../../components/TeacherItem'
 import { BorderlessButton, RectButton } from 'react-native-gesture-handler'
 import { Feather } from '@expo/vector-icons'
 import api from '../../services/api'
+import AsyncStorage from '@react-native-community/async-storage'
 import styles from './styles'
 
 function TeacherList() {
     const [isFiltersVisible, setIsFiltersVisible] = useState(false)
+    const [favorites, setFavorites] = useState<number[]>([])
     const [teachers, setTeachers] = useState([])
     const [subject, setSubject] = useState("")
     const [week_day, setWeekDay] = useState("")
     const [time, setTime] = useState("")
+
+    function loadFavorites() {
+        AsyncStorage.getItem('favorites')
+            .then(response => {
+                if (response) {
+                    const favoritedTeachers = JSON.parse(response)
+                    const favoritedTeachersIds = favoritedTeachers.map((teacher: Teacher) => teacher.id)
+                    setFavorites(favoritedTeachersIds)
+                }
+            })
+    }
 
     function handleToggleFiltersVisible() {
         setIsFiltersVisible(!isFiltersVisible)
@@ -28,7 +41,7 @@ function TeacherList() {
         })
 
         if (classes) setTeachers(classes.data)
-
+        loadFavorites()
         setIsFiltersVisible(false)
     }
 
@@ -87,7 +100,10 @@ function TeacherList() {
                 style={styles.teacherList}
                 contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 16}}>
                 {teachers.map((teacher: Teacher) => (
-                    <TeacherItem teacher={teacher} key={teacher.id} />
+                    <TeacherItem 
+                        teacher={teacher}
+                        favorited={favorites.includes(teacher.id)}
+                        key={teacher.id} />
                 ))}
             </ScrollView>
         </View>
