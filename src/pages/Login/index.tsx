@@ -19,6 +19,8 @@ function Login() {
     const { navigate } = useNavigation()
     const { showError } = useError()
 
+    useEffect(() => showError(false), [])
+
     useEffect(() => {
         if (email && password) {
             setAllowSend(true)
