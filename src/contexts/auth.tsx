@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { View, ActivityIndicator } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import Base64 from '../utilities/base64'
-import api from "../services/api";
+import api, { addTokenMiddleware } from "../services/api";
 
 interface AuthContextData {
     signed: boolean,
@@ -31,6 +31,7 @@ export const AuthProvider: React.FC = ({ children }) => {
 
             if (storagedUser && storagedToken) {
                 api.defaults.headers.authorization = storagedToken
+                addTokenMiddleware(signOut)
                 setUser(JSON.parse(storagedUser))
             }
             setLoading(false)
@@ -52,6 +53,7 @@ export const AuthProvider: React.FC = ({ children }) => {
                 setUser({ id, name, email, avatar })
 
                 api.defaults.headers.authorization = token
+                addTokenMiddleware(signOut)
 
                 await AsyncStorage.setItem('@Proffy:user', JSON.stringify({ id, name, email, avatar }))
                 await AsyncStorage.setItem('@Proffy:token', token)
