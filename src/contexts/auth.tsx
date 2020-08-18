@@ -1,4 +1,6 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
+import { View, ActivityIndicator } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 import Base64 from '../utilities/base64'
 import api from "../services/api";
 
@@ -20,23 +22,57 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData)
 
 export const AuthProvider: React.FC = ({ children }) => {
     const [user, setUser] = useState<User | null>(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function loadStorageData() {
+            const storagedUser = await AsyncStorage.getItem('@Proffy:user')
+            const storagedToken = await AsyncStorage.getItem('@Proffy:token')
+
+            if (storagedUser && storagedToken) {
+                api.defaults.headers.authorization = storagedToken
+                setUser(JSON.parse(storagedUser))
+            }
+            setLoading(false)
+        }
+
+        loadStorageData()
+    }, [])
 
     function signIn(email: string, password: string) {
         if (!email || !password) return false
 
         api.post('/users/auth', { email, password })
-            .then(response => {
-                let tokenData = response.data.token.split(".")[1]
+            .then(async response => {
+                const { token } = response.data
+                let tokenData = token.split(".")[1]
                 tokenData = JSON.parse(Base64.atob(tokenData))
                 
                 const { id, name, email, avatar } = tokenData
                 setUser({ id, name, email, avatar })
+
+                api.defaults.headers.authorization = token
+
+                await AsyncStorage.setItem('@Proffy:user', JSON.stringify({ id, name, email, avatar }))
+                await AsyncStorage.setItem('@Proffy:token', token)
             })
             .catch(() => {})
     }
 
     function signOut() {
-        setUser(null)
+        AsyncStorage.clear()
+            .then(() => {
+                setUser(null)
+            })
+            .catch(() => {})
+    }
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#8257E5" />
+            </View>
+        )
     }
 
     return (
@@ -46,4 +82,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     )
 }
 
-export default AuthContext
+export function useAuth() {
+    const context = useContext(AuthContext)
+    return context
+}

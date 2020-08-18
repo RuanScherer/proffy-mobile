@@ -1,18 +1,18 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import {
     View, Image, ImageBackground, Text, TextInput,
     KeyboardAvoidingView, Platform, Modal, TouchableOpacity
 } from 'react-native'
 import logo from '../../assets/images/logo.png'
 import background from '../../assets/images/background.png'
-import authContext from '../../contexts/auth'
+import { useAuth } from '../../contexts/auth'
 import styles from './styles'
 
 function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState({ visible: false, message: "" })
-    const { signed, signIn } = useContext(authContext)
+    const { signed, signIn } = useAuth()
 
     function handleSignIn() {
         signIn(email, password)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { View, ScrollView, Text, TextInput } from 'react-native'
 import PageHeader from '../../components/PageHeader'
 import TeacherItem, { Teacher } from '../../components/TeacherItem'

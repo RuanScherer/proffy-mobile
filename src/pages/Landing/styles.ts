@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
     topContainer: {
-        height: '45%',
+        height: '50%',
         width: '100%',
         backgroundColor: '#8257E5',
         justifyContent: 'center',
@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     },
 
     bottomContainer: {
-        height: '55%',
+        height: '50%',
         width: '100%',
         backgroundColor: '#F0F0F7',
         justifyContent: 'center',

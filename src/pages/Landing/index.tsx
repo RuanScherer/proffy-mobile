@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { RectButton } from 'react-native-gesture-handler'
@@ -8,12 +8,12 @@ import giveClassesIcon from '../../assets/images/icons/give-classes.png'
 import heartIcon from '../../assets/images/icons/heart.png'
 import logout from '../../assets/images/icons/logout.png'
 import api from '../../services/api'
-import AuthContext from '../../contexts/auth'
+import { useAuth } from '../../contexts/auth'
 import styles from './styles'
 
 function Landing() {
     const [totalConnections, setTotalConnections] = useState(0)
-    const { user, signOut } = useContext(AuthContext)
+    const { user, signOut } = useAuth()
     const { navigate } = useNavigation()
 
     useEffect(() => {
