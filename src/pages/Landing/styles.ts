@@ -1,11 +1,22 @@
 import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+    topContainer: {
+        height: '50%',
+        width: '100%',
         backgroundColor: '#8257E5',
         justifyContent: 'center',
+        alignItems: 'center',
         padding: 40
+    },
+
+    bottomContainer: {
+        height: '50%',
+        width: '100%',
+        backgroundColor: '#F0F0F7',
+        justifyContent: 'center',
+        paddingVertical: 20,
+        paddingHorizontal: 40
     },
 
     banner: {
@@ -15,10 +26,9 @@ const styles = StyleSheet.create({
 
     title: {
         fontFamily: 'Poppins_400Regular',
-        color: '#FFF',
+        color: '#6A6180',
         fontSize: 20,
-        lineHeight: 30,
-        marginTop: 80
+        lineHeight: 30
     },
     
     titleBold: {
@@ -27,7 +37,7 @@ const styles = StyleSheet.create({
 
     buttonsContainer: {
         flexDirection: 'row',
-        marginTop: 40,
+        marginTop: 20,
         justifyContent: 'space-between'
     },
 
@@ -56,11 +66,47 @@ const styles = StyleSheet.create({
 
     totalConnections: {
         fontFamily: 'Poppins_400Regular',
-        color: '#D4C2FF',
+        color: '#9C98A6',
         fontSize: 12,
         lineHeight: 20,
         maxWidth: 140,
-        marginTop: 40
+        marginTop: 15
+    },
+
+    header: {
+        width: '100%',
+        marginTop: 30,
+        marginVertical: 8,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
+    },
+
+    user: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+
+    avatar: {
+        borderRadius: 30,
+        height: 40,
+        width: 40,
+        marginRight: 10
+    },
+
+    username: {
+        fontFamily: 'Poppins_400Regular',
+        color: '#D4C2FF',
+    },
+
+    logout: {
+        padding: 8,
+        height: 45,
+        width: 45,
+        borderRadius: 8,
+        backgroundColor: '#774DD6',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
 
