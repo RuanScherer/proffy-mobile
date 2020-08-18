@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     View, Image, ImageBackground, Text, TextInput,
     KeyboardAvoidingView, Platform, Modal, TouchableOpacity
@@ -6,18 +6,29 @@ import {
 import logo from '../../assets/images/logo.png'
 import background from '../../assets/images/background.png'
 import { useAuth } from '../../contexts/auth'
+import { useNavigation } from '@react-navigation/native'
 import styles from './styles'
+import Popup from '../../components/Popup'
+import { useError } from '../../contexts/error'
 
 function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const [error, setError] = useState({ visible: false, message: "" })
+    const [allowSend, setAllowSend] = useState(false)
     const { signed, signIn } = useAuth()
+    const { navigate } = useNavigation()
+    const { showError } = useError()
+
+    useEffect(() => {
+        if (email && password) {
+            setAllowSend(true)
+        }
+    }, [email, password])
 
     function handleSignIn() {
         signIn(email, password)
         if (!signed) {
-            setError({ visible: true, message: "Erro ao entrar, tente novamente." })
+            showError(true)
         }
     }
 
@@ -28,23 +39,10 @@ function Login() {
                 ? 'padding'
                 : undefined
             }>
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={error.visible}>
-                <View style={styles.modal}>
-                    <View style={styles.modalBox}>
-                        <Text style={styles.modalTitle}>Algo deu errado...</Text>
-                        <Text style={styles.modalMessage}>{error.message}</Text>
-                        <TouchableOpacity 
-                            style={styles.modalButton}
-                            activeOpacity={0.5}
-                            onPress={() => setError({ visible: false, message: "" })}>
-                            <Text style={styles.modalButtonText}>Entendi</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
+            <Popup
+                title="Algo deu errado..."
+                message="Erro ao entrar, tente novamente."
+            />
             <View style={styles.banner}>
                 <ImageBackground
                     resizeMode="contain"
@@ -60,7 +58,9 @@ function Login() {
             <View style={styles.loginForm}>
                 <View style={styles.spaced}>
                     <Text style={styles.title}>Fazer Login</Text>
-                    <TouchableOpacity activeOpacity={0.5}>
+                    <TouchableOpacity 
+                        activeOpacity={0.5}
+                        onPress={() => navigate('Register')}>
                         <Text style={styles.linkText}>Criar uma conta</Text>
                     </TouchableOpacity>
                 </View>
@@ -84,7 +84,11 @@ function Login() {
                 <TouchableOpacity activeOpacity={0.5}>
                     <Text style={styles.text}>Esqueci minha senha</Text>
                 </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={handleSignIn}>
+                <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={[styles.button, allowSend ? {} : styles.disabledButton]}
+                    onPress={handleSignIn}
+                    disabled={!allowSend}>
                     <Text style={styles.buttonText}>Entrar</Text>
                 </TouchableOpacity>
             </View>
