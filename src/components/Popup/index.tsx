@@ -5,11 +5,19 @@ import { useError } from '../../contexts/error'
 
 interface PopupProps {
     title: string,
-    message: string
+    message: string,
+    callback?(): void
 }
 
-const Popup: React.FC<PopupProps> = ({ title, message }) => {
+const Popup: React.FC<PopupProps> = ({ title, message, callback }) => {
     const { visible, showError } = useError()
+
+    function dismiss() {
+        showError(false)
+        if (callback) {
+            callback()
+        }
+    }
 
     return (
         <Modal
@@ -23,7 +31,7 @@ const Popup: React.FC<PopupProps> = ({ title, message }) => {
                     <TouchableOpacity 
                         style={styles.modalButton}
                         activeOpacity={0.5}
-                        onPress={() => showError(false)}>
+                        onPress={dismiss}>
                         <Text style={styles.modalButtonText}>Entendi</Text>
                     </TouchableOpacity>
                 </View>

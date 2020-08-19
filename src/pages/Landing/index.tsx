@@ -34,10 +34,13 @@ function Landing() {
         <>
             <View style={styles.topContainer}>
                 <View style={styles.header}>
-                    <View style={styles.user}>
+                    <TouchableOpacity 
+                        onPress={() => navigate("Profile")}
+                        activeOpacity={0.5}
+                        style={styles.user}>
                         <Image source={{ uri: user?.avatar || "https://api.adorable.io/avatars/220/abott@adorable.png" }} style={styles.avatar}/>
                         <Text style={styles.username}>{user ? user.name : ""}</Text>
-                    </View>
+                    </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.5}
                         style={styles.logout}
